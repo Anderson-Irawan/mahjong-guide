@@ -1,0 +1,709 @@
+/* Mahjong Guide: deck styles.
+   Loaded after ../../presentation.css, so rules here win on equal specificity.
+   Every slide is a fixed 1920x1080 stage. Mahjong Guide.js scales the stage to the window.
+   Component rules are scoped under .slide so they beat the master's global h1 and p rules. */
+
+:root {
+  /* Double Dash palette (locked in the brief) */
+  --cream: #FAFAFF;
+  --ink: #111111;
+  --orange: #FC6935;
+  --indigo: #2E2B8A;
+
+  /* Tile markings and tile face */
+  --red: #C8102E;
+  /* Green: the green dragon (發) and the bamboo sticks. Hex kept at #1F6B4A (round 1 decision). */
+  --green: #1F6B4A;
+  --tile-face: #FFFBF0;
+  --tile-edge: #C9C6E4;
+
+  /* Type scale: 8 tiers */
+  --fs-1: 18px;
+  --fs-2: 24px;
+  --fs-3: 32px;
+  --fs-4: 38px;
+  --fs-5: 56px;
+  --fs-6: 72px;
+  --fs-7: 96px;
+  --fs-8: 110px;
+
+  /* Spacing scale: 8 tiers */
+  --s1: 8px;
+  --s2: 16px;
+  --s3: 24px;
+  --s4: 32px;
+  --s5: 48px;
+  --s6: 64px;
+  --s7: 96px;
+  --s8: 128px;
+
+  --track-caps: 0.14em;
+  --track-head: -0.02em;
+  --lh-head: 1.02;
+  --lh-body: 1.4;
+  --r-sm: 8px;
+  --r-md: 16px;
+
+  /* Chinese characters fall back to the system Chinese faces */
+  --font: "Montserrat", "PingFang HK", "Noto Sans TC", sans-serif;
+}
+
+/* Stage: fixed 1920x1080, positioned and scaled by the JS */
+.deck {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 1080px;
+  transform-origin: 0 0;
+  overflow: hidden;
+  background: var(--cream);
+}
+
+/* Slide base */
+.slide {
+  width: 1920px;
+  height: 1080px;
+  display: block;
+  padding: var(--s7) var(--s8);
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font);
+  font-weight: 500;
+  overflow: hidden;
+}
+.slide.is-indigo { background: var(--indigo); color: var(--cream); }
+.slide.is-orange { background: var(--orange); color: var(--ink); }
+
+.slide .frame { position: relative; height: 100%; }
+
+.slide h1,
+.slide h2 {
+  margin: 0;
+  font-family: var(--font);
+  font-weight: 800;
+  letter-spacing: var(--track-head);
+  line-height: var(--lh-head);
+}
+.slide h1 { font-size: var(--fs-8); }
+.slide h2 { font-size: var(--fs-7); }
+
+.slide p {
+  margin: 0;
+  font-size: var(--fs-4);
+  line-height: var(--lh-body);
+  max-width: none;
+  text-align: left;
+}
+
+.slide ul,
+.slide ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.slide li {
+  position: relative;
+  padding-left: var(--s5);
+  font-size: var(--fs-4);
+  line-height: var(--lh-body);
+}
+.slide li + li { margin-top: var(--s3); }
+.slide li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.36em;
+  width: 0.4em;
+  height: 0.4em;
+  background: var(--orange);
+}
+.slide.is-orange li::before { background: var(--ink); }
+
+/* Tracked caps for small labels and captions */
+.slide .cap {
+  margin: 0;
+  font-size: var(--fs-2);
+  line-height: 1.2;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+/* Layouts */
+.slide .split {
+  display: grid;
+  grid-template-columns: 700px 1fr;
+  column-gap: var(--s6);
+  align-items: center;
+}
+.slide .copy h2 + ul { margin-top: var(--s5); }
+
+.slide .section-frame {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.slide .section-frame p { margin-top: var(--s4); }
+
+/* Title slide: the only centred slide */
+.slide .title-frame {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.slide.is-title h1 { max-width: 1400px; text-align: center; }
+.slide .plain { margin-top: var(--s6); text-align: center; }
+.slide .plain li { padding-left: 0; text-align: center; }
+.slide .plain li::before { display: none; }
+.slide .plain li + li { margin-top: var(--s2); }
+
+/* Slide 2: headline top left, list bottom right */
+.slide.s02 .frame {
+  display: grid;
+  grid-template-columns: 1fr 640px;
+  grid-template-rows: 100%;
+  column-gap: var(--s6);
+}
+.slide.s02 h2 { grid-column: 1; grid-row: 1; align-self: start; }
+.slide.s02 .hand-block { grid-column: 1; grid-row: 1; align-self: end; display: flex; flex-direction: column; gap: var(--s3); }
+.slide.s02 ul { grid-column: 2; grid-row: 1; align-self: end; }
+/* 14 tiles in two rows of seven (7 x 96px + 6 x 16px = 768px) */
+.slide .hand-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+  width: 800px;
+}
+
+/* Keeps a hyphenated term on one line */
+.slide .nowrap { white-space: nowrap; }
+
+/* Tile face: the .tile box, its cream face, edge and shadow */
+.slide .tile-fig {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--s2);
+}
+.slide .tile {
+  --tile-w: 120px;
+  --tile-h: 168px;
+  position: relative;
+  display: block;
+  flex: none;
+  width: var(--tile-w);
+  height: var(--tile-h);
+  border-radius: calc(var(--tile-w) * 0.1);
+  background: var(--tile-face);
+  /* cream face, darker side edge below it, soft lift */
+  box-shadow:
+    inset 0 calc(var(--tile-w) * -0.05) 0 rgba(46, 43, 138, 0.08),
+    0 10px 0 var(--tile-edge),
+    0 20px 30px -12px rgba(17, 17, 17, 0.35);
+}
+.slide .tile--sm { --tile-w: 96px; --tile-h: 134px; }
+.slide .tile--seat { --tile-w: 140px; --tile-h: 196px; }
+.slide .tile--md { --tile-w: 168px; --tile-h: 236px; }
+.slide .tile--lg { --tile-w: 200px; --tile-h: 280px; }
+
+.slide .tile-art {
+  position: absolute;
+  left: 13%;
+  right: 13%;
+  top: 11%;
+  bottom: 11%;
+}
+.slide .art-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.slide .art-chars {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Dots */
+.slide .dot {
+  position: absolute;
+  width: 24%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle closest-side,
+    var(--indigo) 0 30%,
+    var(--tile-face) 33% 44%,
+    var(--indigo) 47% 66%,
+    var(--tile-face) 69% 74%,
+    var(--indigo) 77% 100%);
+}
+.slide .dot--lg { width: 32%; }
+.slide .dot--sm { width: 19%; }
+.slide .dot--red {
+  background: radial-gradient(circle closest-side,
+    var(--red) 0 30%,
+    var(--tile-face) 33% 44%,
+    var(--red) 47% 66%,
+    var(--tile-face) 69% 74%,
+    var(--red) 77% 100%);
+}
+.slide .dot--xl {
+  width: 52%;
+  background: radial-gradient(circle closest-side,
+    var(--red) 0 30%,
+    var(--tile-face) 33% 44%,
+    var(--red) 47% 66%,
+    var(--tile-face) 69% 74%,
+    var(--red) 77% 100%);
+}
+
+/* Bamboo sticks: green thin bars with cream nodes */
+.slide .stick {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  background: repeating-linear-gradient(180deg,
+    var(--green) 0 17%,
+    var(--tile-face) 17% 20%);
+}
+/* 1-bamboo: one green stick with red nodes as the accent */
+.slide .stick--ornate {
+  background: repeating-linear-gradient(180deg,
+    var(--green) 0 17%,
+    var(--red) 17% 20%);
+}
+
+/* Characters and honours */
+.slide .char {
+  display: block;
+  font-family: var(--font);
+  font-weight: 800;
+  line-height: 1;
+}
+.slide .char--num { font-size: calc(var(--tile-w) * 0.5); color: var(--ink); }
+.slide .char--wan { font-size: calc(var(--tile-w) * 0.46); color: var(--red); }
+.slide .char--wind { font-size: calc(var(--tile-w) * 0.62); color: var(--ink); }
+.slide .char--red { font-size: calc(var(--tile-w) * 0.62); color: var(--red); }
+.slide .char--green { font-size: calc(var(--tile-w) * 0.62); color: var(--green); }
+.slide .char--bonus { font-size: calc(var(--tile-w) * 0.56); color: var(--indigo); }
+
+.slide .tile-frame {
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  top: 12%;
+  bottom: 12%;
+  border: 3px solid var(--indigo);
+  border-radius: 6px;
+}
+
+.slide .tile-num {
+  position: absolute;
+  right: 9%;
+  bottom: 6%;
+  font-family: var(--font);
+  font-weight: 800;
+  font-size: calc(var(--tile-w) * 0.14);
+  line-height: 1;
+  color: var(--ink);
+}
+
+/* Tile rows and grids */
+.slide .tile-row {
+  display: flex;
+  gap: var(--s4);
+  align-items: flex-end;
+}
+/* Claim rows: a wider gap so the captions under neighbouring tiles do not touch */
+.slide .tile-row--tight { gap: var(--s4); }
+
+.slide .visual { display: flex; flex-direction: column; gap: var(--s5); }
+
+/* Slide 6: a group label above each row of four tiles */
+.slide .tile-group { display: flex; flex-direction: column; gap: var(--s3); }
+.slide .tile-label { color: var(--indigo); }
+.slide.is-orange .tile-label { color: var(--ink); }
+
+/* Slide 4: three large tiles */
+.slide.s04 .tile-row { gap: var(--s5); }
+
+/* Slide 8: seat diagram */
+.slide .seat-grid {
+  position: relative;
+  /* Half-width and half-height of the turn ring, set to pass through the seat tiles */
+  --rx: 204px;
+  --ry: 265px;
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  grid-template-rows: repeat(3, auto);
+  justify-content: center;
+  justify-items: center;
+  align-items: center;
+  gap: var(--s3);
+}
+.slide .seat-grid .tile-fig { align-items: center; }
+.slide .seat-w { grid-column: 2; grid-row: 1; }
+.slide .seat-n { grid-column: 1; grid-row: 2; }
+.slide .seat-s { grid-column: 3; grid-row: 2; }
+.slide .seat-e { grid-column: 2; grid-row: 3; }
+.slide .table {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  height: 200px;
+  border-radius: var(--r-md);
+  background: var(--orange);
+  color: var(--ink);
+}
+
+/* Anticlockwise turn ring: four quarter arcs (E > S > W > N), each with an arrowhead.
+   Each arc is a full ellipse masked to one quadrant. The arcs run under the seat tiles. */
+.slide .turn {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--rx) * 2);
+  height: calc(var(--ry) * 2);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 3px solid var(--orange);
+  -webkit-mask: conic-gradient(from 270deg, #111111 90deg, #11111100 90deg);
+          mask: conic-gradient(from 270deg, #111111 90deg, #11111100 90deg);
+}
+.slide .turn--tr { -webkit-mask: conic-gradient(from 0deg, #111111 90deg, #11111100 90deg); mask: conic-gradient(from 0deg, #111111 90deg, #11111100 90deg); }
+.slide .turn--br { -webkit-mask: conic-gradient(from 90deg, #111111 90deg, #11111100 90deg); mask: conic-gradient(from 90deg, #111111 90deg, #11111100 90deg); }
+.slide .turn--bl { -webkit-mask: conic-gradient(from 180deg, #111111 90deg, #11111100 90deg); mask: conic-gradient(from 180deg, #111111 90deg, #11111100 90deg); }
+/* Arrowhead at the middle of each arc, pointing along the anticlockwise direction */
+.slide .turn::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 11px solid #11111100;
+  border-right: 11px solid #11111100;
+  border-top: 18px solid var(--orange);
+}
+.slide .turn--tl::after {
+  left: calc(50% - var(--rx) * 0.7071 - 11px);
+  top: calc(50% - var(--ry) * 0.7071 - 9px);
+  transform: rotate(45deg);
+}
+.slide .turn--bl::after {
+  left: calc(50% - var(--rx) * 0.7071 - 11px);
+  top: calc(50% + var(--ry) * 0.7071 - 9px);
+  transform: rotate(-45deg);
+}
+.slide .turn--br::after {
+  left: calc(50% + var(--rx) * 0.7071 - 11px);
+  top: calc(50% + var(--ry) * 0.7071 - 9px);
+  transform: rotate(-135deg);
+}
+.slide .turn--tr::after {
+  left: calc(50% + var(--rx) * 0.7071 - 11px);
+  top: calc(50% - var(--ry) * 0.7071 - 9px);
+  transform: rotate(135deg);
+}
+
+/* Slide 9: a square wall, four sides of 18 stacks each.
+   Each stack is a 4px cream gap in the stripe pattern, so the gradient period is 1/18 of the side. */
+.slide .wall {
+  position: relative;
+  width: 600px;
+  height: 600px;
+  align-self: center;
+}
+.slide .wall-row {
+  position: absolute;
+  background: repeating-linear-gradient(90deg,
+    var(--indigo) 0 calc(100% / 18 - 4px),
+    var(--cream) 0 calc(100% / 18));
+}
+.slide .wall-row--top { left: 0; top: 0; width: 100%; height: 56px; }
+.slide .wall-row--bottom { left: 0; bottom: 0; width: 100%; height: 56px; }
+.slide .wall-row--left,
+.slide .wall-row--right {
+  top: 56px;
+  bottom: 56px;
+  width: 56px;
+  background: repeating-linear-gradient(180deg,
+    var(--indigo) 0 calc(100% / 18 - 4px),
+    var(--cream) 0 calc(100% / 18));
+}
+.slide .wall-row--left { left: 0; }
+.slide .wall-row--right { right: 0; }
+.slide .wall-row--break::after {
+  content: "";
+  position: absolute;
+  left: 58%;
+  top: -16px;
+  bottom: -16px;
+  width: 14px;
+  border-radius: 7px;
+  background: var(--orange);
+}
+.slide .wall-label {
+  position: absolute;
+  left: calc(58% + 7px);
+  top: -64px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+/* Slide 10: two action panels */
+.slide .panels {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: var(--s4);
+  height: 720px;
+}
+.slide .panel {
+  display: flex;
+  align-items: flex-end;
+  padding: var(--s5);
+  border-radius: var(--r-md);
+  font-size: var(--fs-7);
+  font-weight: 800;
+  letter-spacing: var(--track-head);
+  line-height: 1;
+}
+.slide .panel-draw { background: var(--orange); color: var(--ink); }
+.slide .panel-discard { background: var(--indigo); color: var(--cream); }
+
+/* Slide 11: three claim rows */
+.slide .claims { gap: var(--s5); }
+.slide .claim {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s4);
+}
+/* Label box is exactly one tile tall (tile--sm is 134px), so its text centres on the tile */
+.slide .claim-name {
+  width: 150px;
+  height: 134px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Slide 13: worked hand */
+/* Reserve room at the bottom for the fan pill */
+.slide.s13 .frame { display: flex; flex-direction: column; padding-bottom: calc(var(--s8) + var(--s4)); }
+/* 15 tiles at 98px fill the 1664px frame. Inside a set the gap is 8px; between sets it is about 28px (3.5x) */
+.slide .hand {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: auto;
+}
+.slide .hand .tile { --tile-w: 98px; --tile-h: 137px; }
+.slide .hand-note {
+  margin: var(--s3) 0 auto;
+  font-size: var(--fs-2);
+  line-height: 1.3;
+  text-align: left;
+}
+/* Set label sits above its tiles, centred, and does not widen the set. Two lines: set name, then tiles. */
+.slide .group { position: relative; padding-top: var(--s7); }
+.slide .group > .cap {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  text-align: center;
+}
+.slide .group-tiles { display: flex; gap: var(--s1); }
+/* The last caption is wider than its set, so it hangs off the right edge; anchor it to the frame edge */
+.slide .hand .group:last-child > .cap { left: auto; right: 0; transform: none; }
+.slide .fan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: var(--s4) var(--s5);
+  border-radius: var(--r-md);
+  background: var(--indigo);
+  color: var(--cream);
+  font-size: var(--fs-3);
+  line-height: 1.3;
+}
+
+/* Slide 14: fan values as name and value rows */
+.slide .fan-list { display: flex; flex-direction: column; gap: var(--s3); }
+.slide .fan-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--s4);
+  padding-left: 0;
+}
+.slide .fan-list li + li { margin-top: 0; }
+.slide .fan-list li::before { display: none; }
+.slide .fan-list b {
+  flex: none;
+  font-size: var(--fs-5);
+  font-weight: 800;
+  color: var(--indigo);
+  line-height: 1;
+}
+
+/* Slide 14: footnote pinned to the bottom of the frame */
+.slide .footnote {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  margin: 0;
+  font-size: var(--fs-2);
+  line-height: 1.3;
+}
+
+/* Slide 15: five value cards and two notes */
+.slide .cards {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--s3);
+  margin-top: var(--s6);
+}
+.slide .card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 460px;
+  padding: var(--s4);
+  border-radius: var(--r-md);
+  background: var(--indigo);
+  color: var(--cream);
+}
+.slide .card.is-accent { background: var(--orange); color: var(--ink); }
+.slide .card span {
+  font-size: var(--fs-3);
+  line-height: 1.2;
+  font-weight: 600;
+}
+.slide .card b {
+  font-size: var(--fs-8);
+  font-weight: 800;
+  line-height: 1;
+}
+.slide .notes-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: var(--s6);
+  margin-top: var(--s6);
+}
+
+/* Slide 16: rounds grid */
+.slide .rounds {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  gap: var(--s5) var(--s6);
+  justify-content: start;
+}
+
+/* Slide 16: wider text column so the four bullets stay on the slide with room below */
+.slide.s16 .split { grid-template-columns: 920px 1fr; }
+
+/* Slide 17: numbered steps */
+.slide .steps { display: flex; flex-direction: column; gap: var(--s4); }
+.slide .steps li {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  align-items: baseline;
+  padding-left: 0;
+}
+.slide .steps li + li { margin-top: 0; }
+.slide .steps li::before { display: none; }
+.slide .steps .num {
+  font-size: var(--fs-5);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--indigo);
+}
+
+/* Slide 18: checklist with open boxes */
+/* Checklist takes the rest of the slide; three rows share the height, items centred in each row */
+.slide.s18 .frame { display: flex; flex-direction: column; }
+.slide .checklist {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(3, 1fr);
+  align-items: center;
+  gap: var(--s5) var(--s6);
+  margin-top: var(--s6);
+  margin-bottom: var(--s6);
+}
+.slide .checklist li { padding-left: 72px; }
+.slide .checklist li + li { margin-top: 0; }
+.slide .checklist li::before {
+  top: 0.1em;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: 4px solid var(--ink);
+  border-radius: var(--r-sm);
+}
+
+/* Slide counter: the shared master sets 0.9rem, raised here to the 24px caption tier */
+.counter { font-size: var(--fs-2); }
+
+/* Print: one 1920x1080 page per slide, no scaling, no counter or notes */
+@page {
+  size: 1920px 1080px;
+  margin: 0;
+}
+@media print {
+  html,
+  body {
+    height: auto !important;
+    overflow: visible !important;
+    background: var(--cream) !important;
+  }
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .deck {
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+    width: 1920px !important;
+    height: auto !important;
+    transform: none !important;
+    overflow: visible !important;
+    display: block !important;
+  }
+  .slide {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    width: 1920px !important;
+    height: 1080px !important;
+    transform: none !important;
+    opacity: 1 !important;
+    transition: none !important;
+    page-break-after: always;
+    break-after: page;
+    page-break-inside: avoid;
+    overflow: hidden !important;
+  }
+  .slide:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+  .counter,
+  .notes {
+    display: none !important;
+  }
+}
